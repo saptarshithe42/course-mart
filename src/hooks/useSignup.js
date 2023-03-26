@@ -40,8 +40,9 @@ export const useSignup = () => {
             await projectFirestore.collection("users").doc(res.user.uid).set({
                 displayName,
                 purchasedCourses : [],
-                createdCourses : [],
-                wishList : [],
+                publishedCourses : [],
+                drafts: [],
+                wishlist : [],
                 cart : [] 
             })
 

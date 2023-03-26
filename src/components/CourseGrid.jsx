@@ -1,12 +1,12 @@
 import React from "react"
 
 //styles
-import "./BooksGrid.css"
+import "./CourseGrid.css"
 
 // components
 import BookCard from "./BookCard"
 
-function BooksGrid({bookList}) {
+function CourseGrid({courseList, cardType}) {
   return (
     <div className="book-grid-holder container">
 
@@ -19,4 +19,4 @@ function BooksGrid({bookList}) {
   )
 }
 
-export default BooksGrid
+export default CourseGrid
