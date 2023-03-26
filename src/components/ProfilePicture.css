@@ -1,0 +1,29 @@
+.profile-img{
+
+    border-radius: 50%;
+    width: 40%;
+    height: auto;
+}
+
+.profile-div{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    /* color: white; */
+}
+
+.img-input-box{
+    /* width: 50%; */
+    /* padding: 1rem; */
+    padding-left: 1rem;
+}
+
+.input-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.input-div .btn{
+    margin : 1rem;
+}

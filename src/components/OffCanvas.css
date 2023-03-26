@@ -1,0 +1,35 @@
+.offcanvas-header{
+
+    display: flex;
+    justify-content: center;
+}
+
+.offcanvas{
+    background-color: black;
+    color: white;
+}
+
+.offcanvas-options-list li{
+
+    list-style-type: none;
+    line-height: 2.5;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    /* text-decoration: none !important; */
+}
+
+.nav-link-item{
+    color: white;
+    text-decoration: none;
+    width: 100%;
+    font-size: 1.2rem;
+    
+}
+
+.offcanvas-icons{
+    font-size: 1.2rem;
+    margin-left: 1.5rem;
+    margin-right: 1rem;
+}

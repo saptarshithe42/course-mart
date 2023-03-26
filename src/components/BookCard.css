@@ -1,0 +1,18 @@
+.card{
+    margin : 1rem;
+}
+
+.card-holder-div{
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.card-holder-div .card-img{
+
+    width: 15rem;
+    /* height: 15rem; */
+    height: auto;
+}

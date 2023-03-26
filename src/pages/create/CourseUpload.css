@@ -1,0 +1,21 @@
+.course-form{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+.course-form .btn{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.course-form .form-text{
+    color: white;
+}
+
+.course-form .edition{
+    width: 50%;
+}
