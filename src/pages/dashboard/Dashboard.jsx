@@ -8,7 +8,7 @@ import './Dashboard.css'
 
 // components
 import SearchComponent from "../../components/SearchComponent";
-import BooksGrid from "../../components/BooksGrid";
+import CourseGrid from "../../components/CourseGrid";
 import LoadingAnimation from "../../components/LoadingAnimation";
 
 
@@ -17,8 +17,7 @@ export default function Dashboard() {
 	// const {documents : bookList, error} = useCollection("books", {})
 
 	const [isLoading, setIsLoading] = useState(false)
-	const [bookList, setBookList] = useState([])
-	const booksRef = projectFirestore.collection("books")
+	const [courseList, setCourseList] = useState([])
 	const [fetchLimit, setFetchLimit] = useState(3)
 
 	useEffect(() => {
@@ -47,7 +46,7 @@ export default function Dashboard() {
 
 		}
 
-		fetchBooks()
+		// fetchBooks()
 	}, [fetchLimit])
 
 
@@ -66,8 +65,8 @@ export default function Dashboard() {
 			{isLoading ? <LoadingAnimation /> :
 				<div className="main-div">
 					<h1 className="list-heading">Most Popular</h1>
-					<BooksGrid
-						bookList={bookList}
+					<CourseGrid
+						courseList={courseList}
 					/>
 
 					<button className="btn btn-primary"

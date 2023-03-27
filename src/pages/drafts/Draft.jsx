@@ -7,6 +7,7 @@ import "./Draft.css"
 
 // components
 import LoadingAnimation from "../../components/LoadingAnimation"
+import CourseGrid from "../../components/CourseGrid"
 
 function Draft() {
 
@@ -71,14 +72,15 @@ function Draft() {
 			{isLoading ? <LoadingAnimation /> :
 
 				<div className="main-div">
-					<h1 className="list-heading">Favourites</h1>
-					<BooksGrid
-						bookList={bookList}
+					<h1 className="list-heading">Drafts</h1>
+					<CourseGrid
+						courseList={drafts}
+						cardType="draft"
 					/>
 
-					<button className="btn btn-primary"
+					{/* <button className="btn btn-primary"
 						onClick={incrementFetchLimit}
-					>More</button>
+					>More</button> */}
 				</div>
 
 			}

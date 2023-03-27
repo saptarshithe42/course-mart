@@ -4,15 +4,19 @@ import React from "react"
 import "./CourseGrid.css"
 
 // components
-import BookCard from "./BookCard"
+import CourseCard from "./CourseCard"
+import DraftCard from "./DraftCard"
 
 function CourseGrid({courseList, cardType}) {
   return (
     <div className="book-grid-holder container">
 
       <div className="book-grid row justify-content-center">
-        {bookList.map((book, index) => {
-          return (<BookCard book={book} key={index} />)
+        {courseList.map((course, index) => {
+          if(cardType === "draft")
+            return (<DraftCard course={course} />)
+          else if (cardType === "course")
+            return (<CourseCard course={course} />)
         })}
       </div>
     </div>
