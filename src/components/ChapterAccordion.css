@@ -1,0 +1,14 @@
+.chapter-acc-header-div{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+}
+
+.chapter-acc-header-div .header-div-element{
+
+    margin-left : 1rem;
+    margin-right: 1rem;
+}

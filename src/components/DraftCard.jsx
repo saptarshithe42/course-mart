@@ -10,7 +10,7 @@ function DraftCard({ course }) {
                 <img src={course.imgUrl} className="card-img" alt="..." />
                 <div className="card-body">
                     <h5 className="card-title">{course.name}</h5>
-                    <a href={`/content_upload/${course.id}`}   className="btn btn-primary">Upload Content</a>
+                    <a href={`/content_upload/${course.name}/${course.id}`}   className="btn btn-primary">Upload Content</a>
                 </div>
             </div>
         </div>

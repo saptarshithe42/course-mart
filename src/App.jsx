@@ -45,7 +45,7 @@ function App() {
 
           {user && <Route path="/drafts" element={<Draft />} />}
 
-          {user && <Route path="/content_upload/:id" element={<ContentUpload />} />}
+          {user && <Route path="/content_upload/:courseName/:id" element={<ContentUpload />} />}
 
 
           {/* <Route path="/book/:id" element={<BookDetails />} /> */}

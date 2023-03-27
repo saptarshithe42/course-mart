@@ -1,0 +1,32 @@
+.content-form .icon-div{
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+}
+
+.content-form .close-button{
+    background-color: red;
+    cursor : pointer;
+}
+
+.content-form .up-button{
+    background-color: green;
+    cursor : pointer;
+}
+
+.content-form .down-button{
+    background-color: blue;
+    cursor : pointer;
+}
+
+.content-form .icon{
+    margin : 0.5rem;
+}
+
+.content-form .btn{
+    margin : 1rem;
+}
+
+.content-upload-div{
+    color : white;
+}
