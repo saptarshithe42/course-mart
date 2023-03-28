@@ -33,3 +33,21 @@
     margin-left: 1.5rem;
     margin-right: 1rem;
 }
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#sidebar a.active{
+
+    background-color: white;
+    color : black;
+}
+
+.nav-link-item{
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    padding : 0.3rem;
+}

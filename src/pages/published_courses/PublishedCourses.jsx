@@ -3,13 +3,13 @@ import { projectFirestore } from "../../firebase/config"
 import { useAuthContext } from "../../hooks/useAuthContext"
 
 // styles
-import "./Draft.css"
+import "./PublishedCourses.css"
 
 // components
 import LoadingAnimation from "../../components/LoadingAnimation"
 import CourseGrid from "../../components/CourseGrid"
 
-function Draft() {
+function PublishedCourses() {
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [drafts, setDrafts] = useState([])
@@ -105,4 +105,4 @@ function Draft() {
 	)
 }
 
-export default Draft
+export default PublishedCourses

@@ -88,12 +88,13 @@ function CourseUpload() {
 				enrolledCount : 0,
 				createdBy: user.displayName,
 				imgUrl: imgUrl,
-				createdAt: timestamp.fromDate(new Date()),
+				updatedAt: timestamp.fromDate(new Date()),
 				language: (language.trim()).toUpperCase(),
 				description: description.trim(),
 				price : price,
 				ratedCount : 0,
-				avgRating : 0
+				avgRating : 0,
+				isPublished : false
 
 			}
 
@@ -104,7 +105,7 @@ function CourseUpload() {
 				id : addedCourse.id,
 				content : [],
 				imgUrl : imgUrl,
-				createdAt: timestamp.fromDate(new Date())
+				updatedAt: timestamp.fromDate(new Date())
 			}
 
 			// create a course entry in the "course_contents" collection

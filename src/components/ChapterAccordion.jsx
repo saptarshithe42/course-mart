@@ -6,6 +6,11 @@ import "./ChapterAccordion.css"
 // components
 import Accordion from "react-bootstrap/Accordion";
 
+// icons
+import { AiOutlineCloseSquare } from "react-icons/ai"
+import { BsArrowUpSquare } from "react-icons/bs"
+import { BsArrowDownSquare } from "react-icons/bs"
+
 function ChapterAccordion(prop) {
 
     const { chapterArr, deleteChapter, chapterMoveUp, chapterMoveDown } = prop
@@ -18,7 +23,7 @@ function ChapterAccordion(prop) {
                     return (
                         <Accordion.Item eventKey={index} key={index}>
                             <Accordion.Header>
-                                <div className="container">
+                                <div className="container acc-header">
                                     <div className="row">
                                         <div className="col">
                                             <div className="header-div-element"> {chapter.name} </div>
@@ -26,24 +31,29 @@ function ChapterAccordion(prop) {
                                         </div>
                                         {(index !== 0) &&
                                             <div className="col text-center">
-                                                <a className="btn btn-success"
+                                                <BsArrowUpSquare
+                                                    className="up-button icon"
                                                     onClick={(e) => { chapterMoveUp(index, e) }}
-                                                >Up</a>
+                                                    
+                                                />
                                             </div>
                                         }
 
                                         {(index !== (chapterArr.length - 1)) &&
                                             <div className="col text-center">
-                                                <a className="btn btn-primary"
+                                                <BsArrowDownSquare
+                                                    className="down-button icon"
                                                     onClick={(e) => { chapterMoveDown(index, e) }}
-                                                >Down</a>
+                                                    
+                                                />
                                             </div>
                                         }
 
                                         <div className="col text-center">
-                                            <a className="btn btn-danger"
+                                            <AiOutlineCloseSquare
+                                                className="close-button icon"
                                                 onClick={(e) => { deleteChapter(index, e) }}
-                                            >Delete</a>
+                                                 />
                                         </div>
                                     </div>
                                 </div>

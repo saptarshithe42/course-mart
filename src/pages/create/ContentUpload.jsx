@@ -1,14 +1,15 @@
 import React, { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuthContext } from "../../hooks/useAuthContext"
-import { projectStorage } from "../../firebase/config"
+import { projectFirestore, projectStorage, timestamp } from "../../firebase/config"
 
 // styles
 import "./ContentUpload.css"
 
 // components
 import ChapterAccordion from "../../components/ChapterAccordion"
-import  LoadingAnimation from "../../components/LoadingAnimation"
+import LoadingAnimation from "../../components/LoadingAnimation"
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 // icons
 import { AiOutlineCloseSquare } from "react-icons/ai"
@@ -27,6 +28,7 @@ function ContentUpload() {
     const [chapterStart, setChapterStart] = useState(false)
     const [videoArr, setVideoArr] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const [uploadedChapters, setUploadedChapters] = useState(0)
 
     const { user } = useAuthContext()
     const navigate = useNavigate()
@@ -183,6 +185,8 @@ function ContentUpload() {
 
             setIsLoading(true)
 
+
+            // uploading videos to firebase storage, and getting the URL in return
             for (const chapter of chapterArr) {
 
                 let chapterObj = {
@@ -194,7 +198,7 @@ function ContentUpload() {
 
                     const file = video.file
 
-                    const fileUploadPath = `videos/${user.uid}/${chapter.name}/${video.topic}`
+                    const fileUploadPath = `videos/${user.uid}/${courseName}/${chapter.name}/${video.topic}`
 
                     const uploadedFile = await projectStorage.ref(fileUploadPath).put(file)
 
@@ -208,11 +212,54 @@ function ContentUpload() {
                     chapterObj.videoArr.push(videoObj)
 
                 }
+
+                setUploadedChapters((prev) => {
+                    return (prev + 1)
+                })
+
                 contentArr.push(chapterObj)
             }
 
-            setIsLoading(false)
+            
             console.log(contentArr);
+
+            // update in course contents document
+            const contentRef = projectFirestore.collection("course_contents").doc(id)
+
+            await contentRef.update({
+                content: contentArr,
+                updatedAt: timestamp.fromDate(new Date())
+            })
+
+            const courseRef = projectFirestore.collection("courses").doc(id)
+
+            await courseRef.update({
+                updatedAt: timestamp.fromDate(new Date()),
+                isPublished : true
+            })
+
+            // move current course ID entry from drafts array to publishedCourses array of user
+
+            const userRef = projectFirestore.collection("users").doc(user.uid)
+
+            let userData = (await userRef.get()).data()
+
+            let draftsArr = userData.drafts
+
+            draftsArr = draftsArr.filter((courseID) => (courseID !== id))
+
+
+            let publishedArr = userData.publishedCourses
+
+            publishedArr.push(id)
+
+            await userRef.update({
+                drafts: draftsArr,
+                publishedCourses: publishedArr
+            })
+
+
+            setIsLoading(false)
             navigate("/")
 
         } catch (err) {
@@ -224,156 +271,164 @@ function ContentUpload() {
 
     return (
         <div>
-            {isLoading ? <LoadingAnimation /> :
-                
+            {isLoading ?
+                <div>
+                    <div className="upload-status">
+                        <h2 className="upload-status-heading">Chapters Uploaded : {uploadedChapters} / {chapterArr.length} </h2>
+
+                        <ProgressBar animated now={Math.floor((uploadedChapters / chapterArr.length) * 100)} />
+                    </div>
+                </div>
+                :
                 <div className="content-upload-div">
-                <h1 style={{ textAlign: "center" }}>{courseName}</h1>
-                <form className="course-form content-form">
-                    <div>
+                    <h1 style={{ textAlign: "center" }}>{courseName}</h1>
+                    <form className="course-form content-form">
                         <div>
-                            {chapterArr &&
-                                <div>
-                                    <ChapterAccordion
-                                        chapterArr={chapterArr}
-                                        deleteChapter={deleteChapter}
-                                        chapterMoveUp={chapterMoveUp}
-                                        chapterMoveDown={chapterMoveDown}
-                                    />
-                                </div>
-                            }
-                            {!chapterStart &&
-                                <div style={{ textAlign: "center" }}>
-
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={addChapter}
-                                    >
-                                        Add Chapter
-                                    </button>
-                                </div>
-                            }
-                            {chapterStart &&
-
-                                <div>
-
-                                    <div className="mb-3">
-                                        <label htmlFor="chapterName" className="form-label">Chapter Name :</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="chapterName"
-                                            aria-describedby="chapterName"
-                                            autoComplete="off"
-                                            onChange={(e) => setChapterName(e.target.value)}
-                                            value={chapterName}
-                                            required
+                            <div>
+                                {chapterArr &&
+                                    <div>
+                                        <ChapterAccordion
+                                            chapterArr={chapterArr}
+                                            deleteChapter={deleteChapter}
+                                            chapterMoveUp={chapterMoveUp}
+                                            chapterMoveDown={chapterMoveDown}
                                         />
                                     </div>
-                                    {
-                                        <div>
-                                            <h5>{chapterName}</h5>
-                                            <ol>
-                                                {videoArr.map((video, index) => {
-                                                    return (
-                                                        <div key={index}>
-                                                            <li key={index}>
-                                                                {video.topic} &nbsp;
-                                                                <div className="icon-div">
-                                                                    <AiOutlineCloseSquare
-                                                                        className="close-button icon"
-                                                                        onClick={() => { removeVideo(index) }}
-                                                                        fontSize="1.5rem" />
-
-                                                                    {index != 0 &&
-                                                                        <BsArrowUpSquare
-                                                                            className="up-button icon"
-                                                                            onClick={() => { moveUp(index) }}
-                                                                            fontSize="1.5rem"
-                                                                        />
-                                                                    }
-
-                                                                    {index != (videoArr.length - 1) &&
-                                                                        <BsArrowDownSquare
-                                                                            className="down-button icon"
-                                                                            onClick={() => { moveDown(index) }}
-                                                                            fontSize="1.5rem"
-                                                                        />
-                                                                    }
-                                                                </div>
-                                                            </li>
-
-                                                        </div>
-                                                    )
-                                                })}
-                                            </ol>
-                                        </div>
-                                    }
-
-                                    <div className="mb-3">
-                                        <label htmlFor="videoTopicName" className="form-label">Topic of video :</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="videoTopicName"
-                                            aria-describedby="videoTopicName"
-                                            autoComplete="off"
-                                            onChange={(e) => setVideoTopicName(e.target.value)}
-                                            value={videoTopicName}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label htmlFor="videoFile" className="form-label">Upload Video : </label>
-                                        <input
-                                            className="form-control"
-                                            type="file"
-                                            id="videoFile"
-                                            onChange={handleFileChange}
-                                            required
-                                        />
-                                    </div>
-
-                                    {!videoFileError && videoFile &&
-                                        <div style={{ textAlign: "center" }}>
-                                            <button className="btn btn-primary"
-                                                onClick={addVideo}
-                                            >Add Video</button>
-
-                                            {(videoArr.length !== 0) &&
-                                                <button className="btn btn-primary"
-                                                    onClick={endChapter}
-                                                >End Chapter</button>
-                                            }
-                                        </div>
-                                    }
-
+                                }
+                                {!chapterStart &&
                                     <div style={{ textAlign: "center" }}>
 
                                         <button
                                             className="btn btn-primary"
-                                            onClick={cancelChapter}
+                                            onClick={addChapter}
                                         >
-                                            Cancel
+                                            Add Chapter
                                         </button>
                                     </div>
+                                }
+                                {chapterStart &&
 
-                                </div>
+                                    <div>
 
-                            }
+                                        <div className="mb-3">
+                                            <label htmlFor="chapterName" className="form-label">Chapter Name :</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="chapterName"
+                                                aria-describedby="chapterName"
+                                                autoComplete="off"
+                                                onChange={(e) => setChapterName(e.target.value)}
+                                                value={chapterName}
+                                                required
+                                            />
+                                        </div>
+                                        {
+                                            <div>
+                                                <h5>{chapterName}</h5>
+                                                <ol>
+                                                    {videoArr.map((video, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                <li key={index}>
+                                                                    {video.topic} &nbsp;
+                                                                    <div className="icon-div">
+
+                                                                        {index != 0 &&
+                                                                            <BsArrowUpSquare
+                                                                                className="up-button icon"
+                                                                                onClick={() => { moveUp(index) }}
+                                                                                fontSize="1.5rem"
+                                                                            />
+                                                                        }
+
+                                                                        {index != (videoArr.length - 1) &&
+                                                                            <BsArrowDownSquare
+                                                                                className="down-button icon"
+                                                                                onClick={() => { moveDown(index) }}
+                                                                                fontSize="1.5rem"
+                                                                            />
+                                                                        }
+
+                                                                        <AiOutlineCloseSquare
+                                                                            className="close-button icon"
+                                                                            onClick={() => { removeVideo(index) }}
+                                                                            fontSize="1.5rem" />
+                                                                    </div>
+                                                                </li>
+
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </ol>
+                                            </div>
+                                        }
+
+                                        <div className="mb-3">
+                                            <label htmlFor="videoTopicName" className="form-label">Topic of video :</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="videoTopicName"
+                                                aria-describedby="videoTopicName"
+                                                autoComplete="off"
+                                                onChange={(e) => setVideoTopicName(e.target.value)}
+                                                value={videoTopicName}
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="mb-3">
+                                            <label htmlFor="videoFile" className="form-label">Upload Video : </label>
+                                            <input
+                                                className="form-control"
+                                                type="file"
+                                                id="videoFile"
+                                                onChange={handleFileChange}
+                                                required
+                                            />
+                                        </div>
+
+                                        {!videoFileError && videoFile &&
+                                            <div style={{ textAlign: "center" }}>
+                                                <button className="btn btn-primary"
+                                                    onClick={addVideo}
+                                                >Add Video</button>
+
+                                                {(videoArr.length !== 0) &&
+                                                    <button className="btn btn-primary"
+                                                        onClick={endChapter}
+                                                    >End Chapter</button>
+                                                }
+                                            </div>
+                                        }
+
+                                        <div style={{ textAlign: "center" }}>
+
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={cancelChapter}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                }
+                            </div>
                         </div>
-                    </div>
-                    <div style={{ textAlign: "center" }}>
+                        <div style={{ textAlign: "center" }}>
 
-                        {!chapterStart && (chapterArr.length !== 0) && <button
-                            className="btn btn-primary"
-                            onClick={(e) => { e.preventDefault(); publishCourse() }}
-                        >
-                            Publish
-                        </button>}
-                    </div>
-                </form>
-            </div>}
+                            {!chapterStart && (chapterArr.length !== 0) && <button
+                                className="btn btn-primary"
+                                onClick={(e) => { e.preventDefault(); publishCourse() }}
+                            >
+                                Publish
+                            </button>}
+                        </div>
+                    </form>
+                </div>}
         </div>
     )
 }

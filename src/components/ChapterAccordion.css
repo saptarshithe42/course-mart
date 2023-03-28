@@ -12,3 +12,8 @@
     margin-left : 1rem;
     margin-right: 1rem;
 }
+
+.acc-header .icon{
+    color: white;
+    font-size: 2rem;
+}
