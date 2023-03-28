@@ -16,3 +16,18 @@
     /* height: 15rem; */
     height: 15rem;
 }
+
+.course-card .rating-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.course-card .rating-div .star-svg{
+    padding-bottom: 0.4rem;
+}
+
+.course-card .btn{
+
+    margin-top : 1rem;
+}

@@ -14,39 +14,40 @@ import LoadingAnimation from "../../components/LoadingAnimation";
 
 export default function Dashboard() {
 
-	// const {documents : bookList, error} = useCollection("books", {})
-
 	const [isLoading, setIsLoading] = useState(false)
 	const [courseList, setCourseList] = useState([])
 	const [fetchLimit, setFetchLimit] = useState(3)
 
 	useEffect(() => {
 
-		const fetchBooks = async () => {
-			// fetch 5 most popular books
+		const fetchData = async () => {
 
 			try {
-				// setIsLoading(true)
-				// let docs = await booksRef.orderBy("upvotes", "desc").limit(fetchLimit).get()
+				setIsLoading(true)
 
-				// let arr = []
-				// docs.forEach((doc) => {
-				// 	// doc.data()
-				// 	arr.push({ ...doc.data(), id: doc.id })
-				// 	// console.log(doc.data())
+				const courseRef = projectFirestore.collection("courses")
+				let docs = await courseRef
+				.where("isPublished", "==", true)
+				.orderBy("enrolledCount", "desc")
+				.orderBy("avgRating", "desc")
+				.limit(fetchLimit).get()
 
-				// })
+				let arr = []
+				docs.forEach((doc) => {
+					arr.push({ ...doc.data(), id: doc.id })
 
-				// setBookList(arr)
+				})
 
-				// setIsLoading(false);
+				setCourseList(arr)
+
+				setIsLoading(false);
 			} catch (err) {
-				alert(err)
+				console.log(err);
 			}
 
 		}
 
-		// fetchBooks()
+		fetchData()
 	}, [fetchLimit])
 
 
@@ -67,6 +68,7 @@ export default function Dashboard() {
 					<h1 className="list-heading">Most Popular</h1>
 					<CourseGrid
 						courseList={courseList}
+						cardType="course"
 					/>
 
 					<button className="btn btn-primary"

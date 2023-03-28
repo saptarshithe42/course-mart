@@ -94,7 +94,8 @@ function CourseUpload() {
 				price : price,
 				ratedCount : 0,
 				avgRating : 0,
-				isPublished : false
+				isPublished : false,
+				createdByID : user.uid
 
 			}
 

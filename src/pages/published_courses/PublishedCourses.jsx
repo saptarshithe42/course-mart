@@ -12,7 +12,7 @@ import CourseGrid from "../../components/CourseGrid"
 function PublishedCourses() {
 
 	const [isLoading, setIsLoading] = useState(false)
-	const [drafts, setDrafts] = useState([])
+	const [publishedCourses, setPublishedCourses] = useState([])
 	const [fetchLimit, setFetchLimit] = useState(3)
 
 	const { user } = useAuthContext()
@@ -30,9 +30,9 @@ function PublishedCourses() {
 
 				// fetching the data
 
-				let draftIDArr = (await userRef.get()).data().drafts
+				let publishedIDArr = (await userRef.get()).data().publishedCourses
 
-				let len = draftIDArr.length
+				let len = publishedIDArr.length
 
 				// fetching limited amount first
 				let i = 0;
@@ -42,24 +42,24 @@ function PublishedCourses() {
 					if(i == len)
 						break;
 
-					currentFetch.push(draftIDArr[i])
+					currentFetch.push(publishedIDArr[i])
 					i++;
 				}
 
 
-				// fetch course content entry for every ID
+				// fetch course entry for every ID
 
-				const contentRef = projectFirestore.collection("course_contents")
+				const courseRef = projectFirestore.collection("courses")
 
 				let arr = []
 
 				for (const courseID of currentFetch) {
-					let doc = (await contentRef.doc(courseID).get())
+					let doc = (await courseRef.doc(courseID).get())
 
 					arr.push({ ...doc.data(), id: doc.id })
 				}
 
-				setDrafts(arr)
+				setPublishedCourses(arr)
 
 				setIsLoading(false)
 
@@ -89,10 +89,10 @@ function PublishedCourses() {
 			{isLoading ? <LoadingAnimation /> :
 
 				<div className="main-div">
-					<h1 className="list-heading">Drafts</h1>
+					<h1 className="list-heading">Published Courses</h1>
 					<CourseGrid
-						courseList={drafts}
-						cardType="draft"
+						courseList={publishedCourses}
+						cardType="published"
 					/>
 
 					<button className="btn btn-primary"

@@ -1,17 +1,17 @@
 import React from 'react'
 
 // styles
-import "./CourseCard.css"
+import "./PublishedCard.css"
 
 // components
 import { Rating } from 'react-simple-star-rating'
 
-function CourseCard({ course }) {
+function PublishedCard({ course }) {
 
 
     return (
 
-        <div className="col col-lg-4 col-md-6 col-sm-12 card-holder-div course-card">
+        <div className="col col-lg-4 col-md-6 col-sm-12 card-holder-div published-card">
             <div className="card" style={{ width: "15rem", overflow: "hidden" }}>
                 <img src={course.imgUrl} className="card-img" alt="..." />
                 <div className="card-body">
@@ -44,4 +44,4 @@ function CourseCard({ course }) {
     )
 }
 
-export default CourseCard
+export default PublishedCard

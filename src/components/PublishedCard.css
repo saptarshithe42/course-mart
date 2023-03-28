@@ -1,0 +1,14 @@
+.published-card .rating-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.published-card .rating-div .star-svg{
+    padding-bottom: 0.4rem;
+}
+
+.published-card .btn{
+
+    margin-top : 1rem;
+}

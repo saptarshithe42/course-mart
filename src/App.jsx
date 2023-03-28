@@ -15,7 +15,7 @@ import CourseUpload from "./pages/create/CourseUpload"
 // import SearchResults from "./pages/search/SearchResults";
 import OffCanvas from "./components/OffCanvas";
 // import WishList from "./pages/wishlist/WishList"
-// import UploadedBooks from "./pages/uploaded_books/UploadedBooks"
+import PublishedCourses from "./pages/published_courses/PublishedCourses";
 // import DownloadedBooks from "./pages/download_books/DownloadedBooks";
 import Draft from "./pages/drafts/Draft";
 import ContentUpload from "./pages/create/ContentUpload";
@@ -44,6 +44,8 @@ function App() {
           {user && <Route path="/create" element={<CourseUpload />} />}
 
           {user && <Route path="/drafts" element={<Draft />} />}
+
+          {user && <Route path="/published_courses" element={<PublishedCourses />} />}
 
           {user && <Route path="/content_upload/:courseName/:id" element={<ContentUpload />} />}
 
