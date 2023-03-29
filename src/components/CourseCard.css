@@ -31,3 +31,8 @@
 
     margin-top : 1rem;
 }
+
+.course-card a {
+    text-decoration: none;
+    color : black;
+}

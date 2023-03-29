@@ -29,32 +29,34 @@ function ChapterAccordion(prop) {
                                             <div className="header-div-element"> {chapter.name} </div>
                                             <div className="header-div-element">({chapter.videoArr.length} Lectures) </div>
                                         </div>
-                                        {(index !== 0) &&
+                                        {(index !== 0) && (chapterMoveUp !== undefined) &&
                                             <div className="col text-center">
                                                 <BsArrowUpSquare
                                                     className="up-button icon"
                                                     onClick={(e) => { chapterMoveUp(index, e) }}
-                                                    
+
                                                 />
                                             </div>
                                         }
 
-                                        {(index !== (chapterArr.length - 1)) &&
+                                        {(index !== (chapterArr.length - 1)) && (chapterMoveDown !== undefined) &&
                                             <div className="col text-center">
                                                 <BsArrowDownSquare
                                                     className="down-button icon"
                                                     onClick={(e) => { chapterMoveDown(index, e) }}
-                                                    
+
                                                 />
                                             </div>
                                         }
 
-                                        <div className="col text-center">
-                                            <AiOutlineCloseSquare
-                                                className="close-button icon"
-                                                onClick={(e) => { deleteChapter(index, e) }}
-                                                 />
-                                        </div>
+                                        {(deleteChapter !== undefined) &&
+                                            <div className="col text-center">
+                                                <AiOutlineCloseSquare
+                                                    className="close-button icon"
+                                                    onClick={(e) => { deleteChapter(index, e) }}
+                                                />
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </Accordion.Header>
