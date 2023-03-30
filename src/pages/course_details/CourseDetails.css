@@ -1,3 +1,18 @@
 .course-details-holder{
     padding-top: 2rem;
 }
+
+.course-details-holder .button-div{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1rem;
+}
+
+.course-details-holder .button-div .btn{
+    margin : 0.3rem;
+}
+
+.course-description {
+    margin-top : 1.5rem;
+}
