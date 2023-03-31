@@ -12,6 +12,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 // icons
 import { AiOutlineCloseSquare } from "react-icons/ai";
+import { BiLinkExternal } from "react-icons/bi"
 
 function Cart() {
 
@@ -89,11 +90,11 @@ function Cart() {
 			const userRef = projectFirestore.collection("users").doc(user.uid)
 
 			await userRef.update({
-				cart : arr
+				cart: arr
 			})
 
-			window.location.reload(true); 
-			
+			window.location.reload(true);
+
 
 		} catch (err) {
 			toast.error(err.message, {
@@ -109,6 +110,11 @@ function Cart() {
 		}
 
 
+	}
+
+	const tableStyle = {
+		backgroundColor: "white",
+		textAlign: "center"
 	}
 
 
@@ -132,24 +138,35 @@ function Cart() {
 
 					<div className="cart-table-div">
 						<h1 style={{ textAlign: "center", color: "white" }}>Cart</h1>
-						<Table striped bordered style={{ backgroundColor: "white" }}>
+						<Table
+							striped
+							bordered
+							responsive
+							style={tableStyle}>
 							<thead>
 								<tr>
 									<th>Name</th>
 									<th>Instructors</th>
 									<th>Rating</th>
 									<th>Price</th>
+									<th>Remove</th>
 								</tr>
 							</thead>
 							<tbody>
 								{cart.map((course, index) => {
 									return (
-										<tr>
-											<td>{course.name}</td>
+										<tr key={index}>
+											<td>
+												<a href={`/course_details/${course.id}`} target="_blank">
+													{course.name} <BiLinkExternal />
+												</a>
+											</td>
 											<td>{course.creatorList.map((name, index) => {
-												return (<span>{name}</span>)
+												return (<div key={index}>{name}</div>)
 											})}</td>
-											<td>{course.avgRating}</td>
+											<td>
+												{course.avgRating}
+											</td>
 											<td>{course.price}</td>
 											<td style={{ textAlign: "center" }}>
 												<AiOutlineCloseSquare

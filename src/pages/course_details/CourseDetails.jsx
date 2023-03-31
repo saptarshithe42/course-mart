@@ -13,10 +13,8 @@ import "./CourseDetails.css"
 import ChapterAccordion from "../../components/ChapterAccordion"
 import ReactPlayer from "react-player"
 import { Rating } from "react-simple-star-rating"
-import Toast from "react-bootstrap/Toast";
-
-import { toast, ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // icons
 import { BsFillSuitHeartFill } from "react-icons/bs"
@@ -55,6 +53,29 @@ function CourseDetails() {
                 const contentRef = projectFirestore.collection("course_contents").doc(id)
                 let courseContent = (await contentRef.get()).data()
 
+
+                if(user.uid === course.createdByID){
+                    setDisableAddToCart(true)
+                    setDisableAddToWishlist(true)
+                }
+                else{
+                    const userRef = projectFirestore.collection("users").doc(user.uid)
+                    let userData = (await userRef.get()).data()
+
+                    let cart = userData.cart
+                    let wishlist = userData.wishlist
+
+                    console.log(cart);
+
+                    if(cart.includes(id)){
+                        setDisableAddToCart(true)
+                        setDisableAddToWishlist(true)
+                    }
+                    else if(wishlist.includes(id)){
+                        setDisableAddToWishlist(true)
+                    }
+                }
+
                 setContentList(courseContent.content)
                 setIsLoading(false)
             } catch (err) {
@@ -85,58 +106,73 @@ function CourseDetails() {
 
     const addToCart = async () => {
 
-        // adding current course ID to user's cart array
-        const userRef = projectFirestore.collection("users").doc(user.uid)
+        try {
 
-        let cart = (await userRef.get()).data().cart
+            // adding current course ID to user"s cart array
+            const userRef = projectFirestore.collection("users").doc(user.uid)
 
-        cart.push(id)
+            let cart = (await userRef.get()).data().cart
 
-        await userRef.update({
-            cart: cart
-        })
+            cart.push(id)
 
-        toast.success("Added To Cart !", {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
+            await userRef.update({
+                cart: cart
+            })
 
-        setAddedToCart(true)
-        setDisableAddToCart(true)
+            toast.success("Added To Cart !", {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+
+            setAddedToCart(true)
+            setDisableAddToCart(true)
+        } catch (err) {
+            // alert(err)
+            toast.error(err.message, {
+                position: "top-center"
+            })
+        }
 
     }
 
     const addToWishlist = async () => {
-        // adding current course ID to user's cart array
-        const userRef = projectFirestore.collection("users").doc(user.uid)
 
-        let wishlist = (await userRef.get()).data().wishlist
+        try {
+            // adding current course ID to user"s cart array
+            const userRef = projectFirestore.collection("users").doc(user.uid)
 
-        wishlist.push(id)
+            let wishlist = (await userRef.get()).data().wishlist
 
-        await userRef.update({
-            wishlist: wishlist
-        })
+            wishlist.push(id)
 
-        toast.success("Added To Wishlist !", {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
+            await userRef.update({
+                wishlist: wishlist
+            })
 
-        setAddedToWishlist(true)
-        setDisableAddToWishlist(true)
+            toast.success("Added To Wishlist !", {
+                position: "bottom-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+
+            setAddedToWishlist(true)
+            setDisableAddToWishlist(true)
+        } catch (err) {
+            toast.error(err.message, {
+                position: "top-center"
+            })
+        }
 
     }
 
@@ -148,7 +184,7 @@ function CourseDetails() {
                 <div className="row course-details-holder" style={{ color: "white" }}>
                     <ToastContainer
                         position="bottom-right"
-                        autoClose={5000}
+                        autoClose={2000}
                         hideProgressBar={false}
                         newestOnTop={false}
                         closeOnClick
@@ -214,29 +250,32 @@ function CourseDetails() {
                                 <div style={{ fontSize: "2rem" }}>
                                     <BsCurrencyRupee /> {course.price}
                                 </div>
-                                <div className="button-div">
-                                    <div>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={addToCart}
-                                            disabled={disableAddToCart}
-                                        >
-                                            <AiOutlineShoppingCart
-                                                fontSize="1.2rem"
-                                            /> &nbsp;
-                                            Add to Cart</button>
-                                        <button className="btn btn-danger"
-                                            onClick={addToWishlist}
-                                            disabled={disableAddToWishlist}
-                                        // style={{ color : "white"}}
-                                        >
-                                            <BsFillSuitHeartFill
-                                                fontSize="1.2rem"
-                                            />
-                                        </button>
+                                {/* (user.uid !== course.createdByID) && */}
+                                {user && 
+                                    <div className="button-div">
+                                        <div>
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={addToCart}
+                                                disabled={disableAddToCart}
+                                            >
+                                                <AiOutlineShoppingCart
+                                                    fontSize="1.2rem"
+                                                /> &nbsp;
+                                                Add to Cart</button>
+                                            <button className="btn btn-danger"
+                                                onClick={addToWishlist}
+                                                disabled={disableAddToWishlist}
+                                            // style={{ color : "white"}}
+                                            >
+                                                <BsFillSuitHeartFill
+                                                    fontSize="1.2rem"
+                                                />
+                                            </button>
 
+                                        </div>
                                     </div>
-                                </div>
+                                }
                                 {/* <Toast
                                     show={addedToCart}
                                     delay={5000}
@@ -270,6 +309,7 @@ function CourseDetails() {
                                         </div>
                                     </Toast.Body>
                                 </Toast> */}
+
                             </div>
                             <div className="col-12">
                                 Reviews / Comment div

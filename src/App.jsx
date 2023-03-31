@@ -21,6 +21,7 @@ import Draft from "./pages/drafts/Draft";
 import ContentUpload from "./pages/create/ContentUpload";
 import CourseDetails from "./pages/course_details/CourseDetails";
 import Cart from "./pages/cart/Cart";
+import Wishlist from "./pages/wishlist/Wishlist";
 
 
 function App() {
@@ -50,10 +51,11 @@ function App() {
           {user && <Route path="/published_courses" element={<PublishedCourses />} />}
 
           {user && <Route path="/cart" element={<Cart />} />}
+          {user && <Route path="/wishlist" element={<Wishlist />} />}
 
           {user && <Route path="/content_upload/:courseName/:id" element={<ContentUpload />} />}
 
-          <Route path="/course_details/:id" element={<CourseDetails />} />
+          <Route path="/course_details/:id" element={!user ? <Login /> : <CourseDetails /> } />
 
 
           {/* <Route path="/book/:id" element={<BookDetails />} /> */}

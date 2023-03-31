@@ -1,0 +1,18 @@
+.wishlist-table-div .close-button{
+    background-color: red;
+    cursor : pointer;
+    color : white;
+    font-size: 1.5rem;
+}
+
+.wishlist-table-div{
+    margin-top: 2rem;
+}
+
+.wishlist-table-div .add-to-cart-btn{
+    font-size : 1.5rem;
+    border : solid 1px black;
+    cursor : pointer;
+    background-color: green;
+    color : white;
+}
