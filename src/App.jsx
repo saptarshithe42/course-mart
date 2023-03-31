@@ -20,6 +20,7 @@ import PublishedCourses from "./pages/published_courses/PublishedCourses";
 import Draft from "./pages/drafts/Draft";
 import ContentUpload from "./pages/create/ContentUpload";
 import CourseDetails from "./pages/course_details/CourseDetails";
+import Cart from "./pages/cart/Cart";
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
           {user && <Route path="/drafts" element={<Draft />} />}
 
           {user && <Route path="/published_courses" element={<PublishedCourses />} />}
+
+          {user && <Route path="/cart" element={<Cart />} />}
 
           {user && <Route path="/content_upload/:courseName/:id" element={<ContentUpload />} />}
 

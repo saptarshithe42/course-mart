@@ -15,6 +15,9 @@ import ReactPlayer from "react-player"
 import { Rating } from "react-simple-star-rating"
 import Toast from "react-bootstrap/Toast";
 
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 // icons
 import { BsFillSuitHeartFill } from "react-icons/bs"
 import { AiOutlineShoppingCart } from "react-icons/ai"
@@ -93,6 +96,17 @@ function CourseDetails() {
             cart: cart
         })
 
+        toast.success("Added To Cart !", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+
         setAddedToCart(true)
         setDisableAddToCart(true)
 
@@ -107,12 +121,23 @@ function CourseDetails() {
         wishlist.push(id)
 
         await userRef.update({
-            wishlist : wishlist
+            wishlist: wishlist
         })
+
+        toast.success("Added To Wishlist !", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
 
         setAddedToWishlist(true)
         setDisableAddToWishlist(true)
-        
+
     }
 
 
@@ -121,7 +146,18 @@ function CourseDetails() {
         <div className="container course-details-container">
             {isLoading ? <LoadingAnimation /> :
                 <div className="row course-details-holder" style={{ color: "white" }}>
-
+                    <ToastContainer
+                        position="bottom-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover={false}
+                        theme="light"
+                    />
                     <div className="col-12 col-lg-6 course-details">
                         <div style={{ textAlign: "center" }}>
                             <h1>{course.name}</h1>
@@ -201,7 +237,7 @@ function CourseDetails() {
 
                                     </div>
                                 </div>
-                                <Toast
+                                {/* <Toast
                                     show={addedToCart}
                                     delay={5000}
                                     bg="Light"
@@ -233,7 +269,7 @@ function CourseDetails() {
                                             Added to Wishlist !
                                         </div>
                                     </Toast.Body>
-                                </Toast>
+                                </Toast> */}
                             </div>
                             <div className="col-12">
                                 Reviews / Comment div
