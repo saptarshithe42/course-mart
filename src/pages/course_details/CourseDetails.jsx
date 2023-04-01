@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useParams } from "react-router-dom"
-import LoadingAnimation from "../../components/LoadingAnimation"
 import { projectFirestore } from "../../firebase/config"
 import { useAuthContext } from "../../hooks/useAuthContext"
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -10,6 +9,7 @@ import videojs from "video.js";
 import "./CourseDetails.css"
 
 // components
+import LoadingAnimation from "../../components/LoadingAnimation"
 import ChapterAccordion from "../../components/ChapterAccordion"
 import ReactPlayer from "react-player"
 import { Rating } from "react-simple-star-rating"
@@ -32,6 +32,7 @@ function CourseDetails() {
     const [disableAddToCart, setDisableAddToCart] = useState(false)
     const [addedToWishlist, setAddedToWishlist] = useState(false)
     const [disableAddToWishlist, setDisableAddToWishlist] = useState(false)
+    const [isPurchased, setIsPurchased] = useState(false)
 
     const playerRef = useRef(null);
 
@@ -54,24 +55,30 @@ function CourseDetails() {
                 let courseContent = (await contentRef.get()).data()
 
 
-                if(user.uid === course.createdByID){
+                if (user.uid === course.createdByID) {
                     setDisableAddToCart(true)
                     setDisableAddToWishlist(true)
                 }
-                else{
+                else {
                     const userRef = projectFirestore.collection("users").doc(user.uid)
                     let userData = (await userRef.get()).data()
 
                     let cart = userData.cart
                     let wishlist = userData.wishlist
+                    let purchasedCourses = userData.purchasedCourses
 
                     console.log(cart);
 
-                    if(cart.includes(id)){
+                    if (purchasedCourses.includes(id)) {
+
+                        setIsPurchased(true)
+                    }
+
+                    else if (cart.includes(id)) {
                         setDisableAddToCart(true)
                         setDisableAddToWishlist(true)
                     }
-                    else if(wishlist.includes(id)){
+                    else if (wishlist.includes(id)) {
                         setDisableAddToWishlist(true)
                     }
                 }
@@ -81,12 +88,14 @@ function CourseDetails() {
             } catch (err) {
 
                 setIsLoading(false)
-                alert(err)
+                toast.error(err.message, {
+                    position: "top-center"
+                })
 
             }
         }
 
-        // fetching book
+        // fetching data
         fetchData();
 
     }, [])
@@ -111,12 +120,18 @@ function CourseDetails() {
             // adding current course ID to user"s cart array
             const userRef = projectFirestore.collection("users").doc(user.uid)
 
-            let cart = (await userRef.get()).data().cart
+            let userData = (await userRef.get()).data()
+
+            let cart = userData.cart
+            let wishlist = userData.wishlist
 
             cart.push(id)
 
+            wishlist = wishlist.filter((courseID) => courseID !== id)
+
             await userRef.update({
-                cart: cart
+                cart: cart,
+                wishlist: wishlist
             })
 
             toast.success("Added To Cart !", {
@@ -247,11 +262,14 @@ function CourseDetails() {
                                 // style={{ marginLeft: "auto", marginRight: "auto" }}
                                 />
                                 <div> Preview </div>
-                                <div style={{ fontSize: "2rem" }}>
-                                    <BsCurrencyRupee /> {course.price}
-                                </div>
+                                {!isPurchased &&
+                                    <div style={{ fontSize: "2rem" }}>
+                                        <BsCurrencyRupee /> {course.price}
+                                    </div>
+                                }
                                 {/* (user.uid !== course.createdByID) && */}
-                                {user && 
+                                {/* {user && */}
+                                {!isPurchased &&
                                     <div className="button-div">
                                         <div>
                                             <button
@@ -276,39 +294,15 @@ function CourseDetails() {
                                         </div>
                                     </div>
                                 }
-                                {/* <Toast
-                                    show={addedToCart}
-                                    delay={5000}
-                                    bg="Light"
-                                    onClose={() => { setAddedToCart(false) }}
-                                    style={{ width: "15rem" }}
-                                >
-                                    <Toast.Header>
-                                        <strong className="me-auto">{course.name}</strong>
-                                    </Toast.Header>
-                                    <Toast.Body>
-                                        <div style={{ color: "black" }}>
-                                            Added to Cart !
-                                        </div>
-                                    </Toast.Body>
-                                </Toast>
-
-                                <Toast
-                                    show={addedToWishlist}
-                                    delay={5000}
-                                    bg="Light"
-                                    onClose={() => { setAddedToWishlist(false) }}
-                                    style={{ width: "15rem" }}
-                                >
-                                    <Toast.Header>
-                                        <strong className="me-auto">{course.name}</strong>
-                                    </Toast.Header>
-                                    <Toast.Body>
-                                        <div style={{ color: "black" }}>
-                                            Added to Wishlist !
-                                        </div>
-                                    </Toast.Body>
-                                </Toast> */}
+                                {isPurchased &&
+                                    <a
+                                    className="btn btn-warning"
+                                    style={{margin : "1rem"}}
+                                    href={`/course_view/${id}`}
+                                    >
+                                   <strong> Go to Course </strong>
+                                    </a>}
+                                {/* } */}
 
                             </div>
                             <div className="col-12">

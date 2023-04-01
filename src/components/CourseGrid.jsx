@@ -7,6 +7,7 @@ import "./CourseGrid.css"
 import CourseCard from "./CourseCard"
 import DraftCard from "./DraftCard"
 import PublishedCard from "./PublishedCard"
+import PurchasedCard from "./PurchasedCard"
 
 function CourseGrid({courseList, cardType}) {
   return (
@@ -20,6 +21,8 @@ function CourseGrid({courseList, cardType}) {
             return (<CourseCard course={course} key={index}  />)
           else if(cardType === "published")
             return <PublishedCard course={course} key={index}  />
+          else if(cardType === "purchased")
+            return (<PurchasedCard course={course} key={index} />)
         })}
       </div>
     </div>

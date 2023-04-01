@@ -13,6 +13,7 @@ import { toast, ToastContainer } from 'react-toastify';
 // icons
 import { AiOutlineCloseSquare } from "react-icons/ai";
 import { BiLinkExternal } from "react-icons/bi"
+import { useNavigate } from "react-router-dom"
 
 function Cart() {
 
@@ -22,6 +23,7 @@ function Cart() {
 	const [totalPrice, setTotalPrice] = useState(0)
 
 	const { user } = useAuthContext()
+	const navigate = useNavigate()
 
 
 	useEffect(() => {
@@ -108,9 +110,49 @@ function Cart() {
 				theme: "light",
 			});
 		}
+	}
 
+	const processPayment = async () => {
+
+		try{
+
+			// add all the current cart items in purchasedCourses array of user
+			const userRef = projectFirestore.collection("users").doc(user.uid)
+
+			let userData = (await userRef.get()).data()
+
+			let purchasedCourses = userData.purchasedCourses
+
+			purchasedCourses = [...purchasedCourses, ...cartIDArr]
+
+			await userRef.update({
+				cart : [],
+				purchasedCourses : purchasedCourses
+			})
+
+			toast.success("Payment Successful !", {
+                position: "bottom-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+
+
+			navigate("/purchased_courses")
+
+
+		} catch(err) {
+			toast.error(err.message, {
+				position : "top-center"
+			})
+		}
 
 	}
+
 
 	const tableStyle = {
 		backgroundColor: "white",
@@ -183,7 +225,11 @@ function Cart() {
 
 						<div className="cart-total-price-div">
 							<div>Total : Rs {totalPrice}</div>
-							<button className="btn">Pay</button>
+							<button className="btn"
+							onClick={processPayment}
+							>
+								Pay
+							</button>
 						</div>
 					</div>
 				</div>
