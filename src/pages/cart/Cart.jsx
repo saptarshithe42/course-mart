@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { projectFirestore } from "../../firebase/config"
+import { projectFirestore, timestamp } from "../../firebase/config"
 import { useAuthContext } from "../../hooks/useAuthContext"
 
 // styles
@@ -114,40 +114,90 @@ function Cart() {
 
 	const processPayment = async () => {
 
-		try{
+		try {
 
-			// add all the current cart items in purchasedCourses array of user
-			const userRef = projectFirestore.collection("users").doc(user.uid)
+			// add all the current cart items in purchasedCourses array 
+			// and purchaseHistory arr of user
+			const customerRef = projectFirestore.collection("users").doc(user.uid)
 
-			let userData = (await userRef.get()).data()
+			let customerData = (await customerRef.get()).data()
 
-			let purchasedCourses = userData.purchasedCourses
+			let purchasedCourses = customerData.purchasedCourses
+			let purchaseHistory = customerData.purchaseHistory
 
 			purchasedCourses = [...purchasedCourses, ...cartIDArr]
+			let arr = [...purchaseHistory]
 
-			await userRef.update({
-				cart : [],
-				purchasedCourses : purchasedCourses
+			cart.forEach((course) => {
+
+				const historyObj = {
+					id: course.id,
+					name: course.name,
+					price: course.price,
+					creatorList: course.creatorList,
+					dateOfPurchase: timestamp.fromDate(new Date())
+				}
+
+				arr.push(historyObj)
 			})
 
+			await customerRef.update({
+				cart: [],
+				purchasedCourses: purchasedCourses,
+				purchaseHistory: arr
+			})
+
+
+
+
+			const courseRef = projectFirestore.collection("courses")
+			const userRef = projectFirestore.collection("users")
+
+			for (const course of cart) {
+
+				// increment enrolledCount of each purchased course by 1
+				await courseRef.doc(course.id).update({
+
+					enrolledCount: (course.enrolledCount + 1)
+				})
+
+				// increment the earnings of their creators
+				let userData = (await userRef.doc(course.createdByID).get()).data()
+
+				let earnings = userData.earnings
+
+				for (let i = 0; i < earnings.length; i++) {
+
+					if (earnings[i].id === course.id) {
+						earnings[i].earning += course.price
+						break;
+					}
+				}
+
+				await userRef.doc(course.createdByID).update({
+					earnings: earnings
+				})
+
+			}
+
 			toast.success("Payment Successful !", {
-                position: "bottom-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
+				position: "bottom-center",
+				autoClose: 2000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: false,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
 
 
 			navigate("/purchased_courses")
 
 
-		} catch(err) {
+		} catch (err) {
 			toast.error(err.message, {
-				position : "top-center"
+				position: "top-center"
 			})
 		}
 
@@ -195,7 +245,7 @@ function Cart() {
 								</tr>
 							</thead>
 							<tbody>
-								{cart.map((course, index) => {
+								{cart && cart.map((course, index) => {
 									return (
 										<tr key={index}>
 											<td>
@@ -223,14 +273,15 @@ function Cart() {
 							</tbody>
 						</Table>
 
-						<div className="cart-total-price-div">
-							<div>Total : Rs {totalPrice}</div>
-							<button className="btn"
-							onClick={processPayment}
-							>
-								Pay
-							</button>
-						</div>
+						{(cart.length !== 0) &&
+							<div className="cart-total-price-div">
+								<div>Total : Rs {totalPrice}</div>
+								<button className="btn"
+									onClick={processPayment}
+								>
+									Pay
+								</button>
+							</div>}
 					</div>
 				</div>
 

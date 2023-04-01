@@ -36,7 +36,9 @@ function PublishedCard({ course }) {
                     <div className="card-text">
                         Rs {course.price}
                     </div>
-                    <button className="btn btn-primary">View</button>
+                    <a className="btn btn-primary"
+                    href={`/course_details/${course.id}`}
+                    >View</a>
                 </div>
             </div>
         </div>

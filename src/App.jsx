@@ -11,7 +11,7 @@ import Login from "./pages/login/Login"
 import Signup from "./pages/signup/Signup";
 import Dashboard from "./pages/dashboard/Dashboard";
 import CourseUpload from "./pages/create/CourseUpload"
-// import SearchResults from "./pages/search/SearchResults";
+import SearchResults from "./pages/search/SearchResults";
 import OffCanvas from "./components/OffCanvas";
 import PublishedCourses from "./pages/published_courses/PublishedCourses";
 import Draft from "./pages/drafts/Draft";
@@ -21,6 +21,8 @@ import Cart from "./pages/cart/Cart";
 import Wishlist from "./pages/wishlist/Wishlist";
 import PurchasedCourses from "./pages/purchased_courses/PurchasedCourses";
 import CourseView from "./pages/course_view/CourseView"
+import PurchaseHistory from "./pages/purchase_history/PurchaseHistory";
+import Earnings from "./pages/earnings/Earnings";
 
 
 function App() {
@@ -37,12 +39,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
 
-          {/* {user && <Route path="/wishlist" element={<WishList />} />} */}
-
-          {/* {user && <Route path="/created_courses" element={<UploadedBooks />} />} */}
-
-          {/* {user && <Route path="/purchased_courses" element={<DownloadedBooks />} />} */}
-
+         
           {user && <Route path="/create" element={<CourseUpload />} />}
 
           {user && <Route path="/drafts" element={<Draft />} />}
@@ -54,6 +51,10 @@ function App() {
           {user && <Route path="/cart" element={<Cart />} />}
           {user && <Route path="/wishlist" element={<Wishlist />} />}
 
+          {user && <Route path="/purchase_history" element={<PurchaseHistory />} />}
+
+          {user && <Route path="/earnings" element={<Earnings />} />}
+
           {user && <Route path="/content_upload/:courseName/:id" element={<ContentUpload />} />}
 
           {/* <Route path="/course_details/:id" element={!user ? <Navigate to="/login" /> : <CourseDetails /> } /> */}
@@ -61,10 +62,7 @@ function App() {
 
           {user && <Route path="/course_view/:id" element={<CourseView /> } />}
 
-
-          {/* <Route path="/book/:id" element={<BookDetails />} /> */}
-
-          {/* <Route path="/search/:query" element={<SearchResults />} /> */}
+          <Route path="/search/:query" element={<SearchResults />} />
 
           {/* <Route path="/login" element={!user ? <Login /> : <Dashboard />} /> */}
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />

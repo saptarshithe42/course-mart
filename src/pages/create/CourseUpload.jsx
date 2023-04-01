@@ -91,7 +91,7 @@ function CourseUpload() {
 				updatedAt: timestamp.fromDate(new Date()),
 				language: (language.trim()).toUpperCase(),
 				description: description.trim(),
-				price : price,
+				price : Number(price),
 				ratedCount : 0,
 				avgRating : 0,
 				isPublished : false,
@@ -142,8 +142,8 @@ function CourseUpload() {
 	return (
 		<div>
 			{isLoading ? <LoadingAnimation /> : <div>
-				<div style={{ textAlign: "center" }}>
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+				<div style={{ textAlign: "center", marginTop : "1rem" }}>
+					<button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 						<AiFillInfoCircle fontSize="1.1rem" />
 						<span>&nbsp;Instructions</span>
 					</button>
@@ -231,7 +231,7 @@ function CourseUpload() {
 						/>
 					</div>
 					<div style={{ textAlign: "center" }}>
-						{thumbnail && !thumbnailError && <button type="submit" class="btn btn-primary">
+						{thumbnail && !thumbnailError && <button type="submit" className="btn btn-primary">
 							<span>Initialize</span>
 						</button>}
 					</div>

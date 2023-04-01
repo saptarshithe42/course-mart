@@ -17,6 +17,7 @@ import {AiOutlineShoppingCart} from "react-icons/ai"
 import {AiFillHeart} from "react-icons/ai"
 import {RiHistoryFill} from "react-icons/ri"
 import {RiDraftLine} from "react-icons/ri"
+import {GiMoneyStack} from "react-icons/gi"
 
 function OffCanvas() {
 
@@ -48,48 +49,43 @@ function OffCanvas() {
             </div>
 
             <div className="offcanvas-body" id="sidebar">
-                {/* <ul className="offcanvas-options-list"> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
+            
                         <NavLink to="/" className="nav-link-item">
                             <AiOutlineHome className="offcanvas-icons" />  Dashboard
                         </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
+                 
                         <NavLink to="/wishlist" className="nav-link-item">
                             <AiFillHeart className="offcanvas-icons" />   Wishlist
                         </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
+                 
                         <NavLink to="/cart" className="nav-link-item">
                             <AiOutlineShoppingCart className="offcanvas-icons" />   Cart
                         </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
+                    
                         <NavLink to="/purchased_courses" className="nav-link-item">
                             <MdVideoLibrary className="offcanvas-icons" />  Purchased Courses
                         </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
-                        <NavLink to="/create" className="nav-link-item">
-                            <RiVideoAddLine className="offcanvas-icons" />  Create Course
-                        </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
-                        <NavLink to="/drafts" className="nav-link-item">
-                            <RiDraftLine className="offcanvas-icons" />  Drafts
-                        </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
-                        <NavLink to="/published_courses" className="nav-link-item">
-                            <AiOutlineUpload className="offcanvas-icons" />  Published Courses
-                        </NavLink>
-                    {/* </li> */}
-                    {/* <li data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions"> */}
+
                         <NavLink to="/purchase_history" className="nav-link-item">
                             <RiHistoryFill className="offcanvas-icons" />  Purchase History
                         </NavLink>
-                    {/* </li> */}
-                {/* </ul> */}
+                  
+                        <NavLink to="/create" className="nav-link-item">
+                            <RiVideoAddLine className="offcanvas-icons" />  Create Course
+                        </NavLink>
+                  
+                        <NavLink to="/drafts" className="nav-link-item">
+                            <RiDraftLine className="offcanvas-icons" />  Drafts
+                        </NavLink>
+                   
+                        <NavLink to="/published_courses" className="nav-link-item">
+                            <AiOutlineUpload className="offcanvas-icons" />  Published Courses
+                        </NavLink>
+
+                        <NavLink to="/earnings" className="nav-link-item">
+                            <GiMoneyStack className="offcanvas-icons" />  Earnings
+                        </NavLink>
+             
             </div>
         </div>
     )

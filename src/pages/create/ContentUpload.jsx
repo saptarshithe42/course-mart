@@ -245,17 +245,23 @@ function ContentUpload() {
             let userData = (await userRef.get()).data()
 
             let draftsArr = userData.drafts
-
             draftsArr = draftsArr.filter((courseID) => (courseID !== id))
 
-
             let publishedArr = userData.publishedCourses
-
             publishedArr.push(id)
+
+            let earnings = userData.earnings
+
+            earnings.push({
+                id : id,
+                name : courseName,
+                earning : 0
+            })
 
             await userRef.update({
                 drafts: draftsArr,
-                publishedCourses: publishedArr
+                publishedCourses: publishedArr,
+                earnings : earnings
             })
 
 

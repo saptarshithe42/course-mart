@@ -43,7 +43,9 @@ export const useSignup = () => {
                 publishedCourses : [],
                 drafts: [],
                 wishlist : [],
-                cart : [] 
+                cart : [] ,
+                purchaseHistory : [],
+                earnings : []
             })
 
             // dispatch login action
