@@ -1,0 +1,15 @@
+.review-card{
+    /* background-color: white;
+    color : black; */
+    border-radius: 25px;
+    padding: 0.8rem;
+    margin : 1rem;
+    text-align: left;
+    border-radius: 25px;
+    border: 5px solid #ddd;
+    box-shadow: -3px -3px 9px #aaa9a9a2,
+        3px 3px 7px rgba(147, 149, 151, 0.671);
+    color: white;
+    background: none;
+    /* width : 50%; */
+}

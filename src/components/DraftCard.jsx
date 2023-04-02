@@ -24,9 +24,10 @@ function DraftCard({ course }) {
                 drafts : draftArr
             })
 
-            // delete document from "courses" and "course_contents" collections
+            // delete document from "courses" , "course_contents" & "reviews" collections
             await projectFirestore.collection("courses").doc(courseID).delete()
             await projectFirestore.collection("course_contents").doc(courseID).delete()
+            await projectFirestore.collection("reviews").doc(courseID).delete()
 
             window.location.reload(true)
 

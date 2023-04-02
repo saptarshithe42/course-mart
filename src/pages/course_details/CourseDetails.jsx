@@ -2,8 +2,6 @@ import React, { useEffect, useState, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { projectFirestore } from "../../firebase/config"
 import { useAuthContext } from "../../hooks/useAuthContext"
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import videojs from "video.js";
 
 // styles
 import "./CourseDetails.css"
@@ -15,11 +13,13 @@ import ReactPlayer from "react-player"
 import { Rating } from "react-simple-star-rating"
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import ReviewModalForm from "../../components/ReviewModalForm"
 
 // icons
 import { BsFillSuitHeartFill } from "react-icons/bs"
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { BsCurrencyRupee } from "react-icons/bs"
+import ReviewContainer from "../../components/ReviewContainer"
 
 
 function CourseDetails() {
@@ -33,6 +33,10 @@ function CourseDetails() {
     const [addedToWishlist, setAddedToWishlist] = useState(false)
     const [disableAddToWishlist, setDisableAddToWishlist] = useState(false)
     const [isPurchased, setIsPurchased] = useState(false)
+    const [reviewModalShow, setReviewModalShow] = useState(false)
+    const [reviews, setReviews] = useState([])
+    const [reviewFetchLimit, setReviewFetchLimit] = useState(2)
+    const [reviewLoading, setReviewLoading] = useState(true)
 
     const playerRef = useRef(null);
 
@@ -67,8 +71,6 @@ function CourseDetails() {
                     let wishlist = userData.wishlist
                     let purchasedCourses = userData.purchasedCourses
 
-                    console.log(cart);
-
                     if (purchasedCourses.includes(id)) {
 
                         setIsPurchased(true)
@@ -100,18 +102,50 @@ function CourseDetails() {
 
     }, [])
 
-    const handlePlayerReady = (player) => {
-        playerRef.current = player;
+    useEffect(() => {
 
-        // You can handle player events here, for example:
-        player.on("waiting", () => {
-            videojs.log("player is waiting");
-        });
+        const fetchReviews = async () => {
 
-        player.on("dispose", () => {
-            videojs.log("player will dispose");
-        });
-    };
+            try {
+                setReviewLoading(true)
+                // fetching reviews
+                const reviewRef = projectFirestore.collection("reviews")
+                let docs = await reviewRef
+                    .where("courseID", "==", id)
+                    .orderBy("rating", "desc")
+                    .limit(reviewFetchLimit).get()
+
+                let arr = []
+                docs.forEach((doc) => {
+                    arr.push({ ...doc.data(), id: doc.id })
+
+                })
+                setReviews(arr)
+                setReviewLoading(false)
+
+            } catch (err) {
+                console.log(err.message);
+                toast.error(err.message, {
+                    position: "top-center",
+                    autoClose: 5000
+                })
+            }
+        }
+
+        fetchReviews()
+
+    }, [reviewFetchLimit])
+
+    const incrementReviewFetchLimit = () => {
+
+		setReviewFetchLimit((prev) => {
+			return (prev + 3);
+		})
+
+	}
+
+
+
 
     const addToCart = async () => {
 
@@ -209,6 +243,12 @@ function CourseDetails() {
                         pauseOnHover={false}
                         theme="light"
                     />
+                    <ReviewModalForm
+                        show={reviewModalShow}
+                        id={id}
+                        course={course}
+                        onHide={() => { setReviewModalShow(false) }}
+                    />
                     <div className="col-12 col-lg-6 course-details">
                         <div style={{ textAlign: "center" }}>
                             <h1>{course.name}</h1>
@@ -217,6 +257,7 @@ function CourseDetails() {
                             })}</div>
 
                             <div className="rating-div" style={{ fontSize: "1rem" }}>
+                            <span>({Math.round(course.avgRating * 10) / 10}) </span>
                                 <Rating
                                     initialValue={course.avgRating}
                                     allowFraction="true"
@@ -295,18 +336,37 @@ function CourseDetails() {
                                     </div>
                                 }
                                 {isPurchased &&
-                                    <a
-                                    className="btn btn-warning"
-                                    style={{margin : "1rem"}}
-                                    href={`/course_view/${id}`}
-                                    >
-                                   <strong> Go to Course </strong>
-                                    </a>}
+                                    <div>
+                                        <a
+                                            className="btn btn-warning"
+                                            style={{ margin: "1rem" }}
+                                            href={`/course_view/${id}`}
+                                        >
+                                            <strong> Go to Course </strong>
+                                        </a>
+
+                                        <button
+                                            className="btn btn-light"
+                                            onClick={() => setReviewModalShow(true)}
+                                        >
+                                            <strong> Rate Course </strong>
+                                        </button>
+                                    </div>
+                                }
                                 {/* } */}
 
                             </div>
-                            <div className="col-12">
-                                Reviews / Comment div
+                            <div className="col-12 text-center">
+                                <h3>Ratings & Reviews</h3>
+                                {
+                                    reviews &&
+                                    <div className="container">
+                                        <ReviewContainer reviews={reviews} />
+                                    </div>
+                                }
+                                <button className="btn btn-primary"
+                                    onClick={incrementReviewFetchLimit}
+                                >More</button>
                             </div>
 
                         </div>

@@ -11,15 +11,14 @@ import LoadingAnimation from "../../components/LoadingAnimation"
 import ReactPlayer from "react-player"
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Plyr from "plyr-react"
 import "plyr-react/plyr.css"
-import ChapterAccordion from "../../components/ChapterAccordion"
 import CourseViewAccordion from "../../components/CourseViewAccordion"
+import ReviewModalForm from "../../components/ReviewModalForm"
 
 function CourseView() {
 
 	const { id } = useParams()
-	const {user} = useAuthContext()
+	const { user } = useAuthContext()
 	const navigate = useNavigate()
 
 	const [course, setCourse] = useState(null)
@@ -28,6 +27,7 @@ function CourseView() {
 	const [currentVideoURL, setCurrentVideoURL] = useState("")
 	const [currentVideoName, setCurrentVideoName] = useState("")
 	const [currentChapterName, setCurrentChapterName] = useState("")
+	const [reviewModalShow, setReviewModalShow] = useState(false)
 
 	useEffect(() => {
 
@@ -41,8 +41,8 @@ function CourseView() {
 
 				const purchasedCourses = (await userRef.get()).data().purchasedCourses
 
-				if(!purchasedCourses.includes(id)){
-					
+				if (!purchasedCourses.includes(id)) {
+
 					navigate("/")
 				}
 
@@ -53,15 +53,12 @@ function CourseView() {
 				setCurrentVideoURL(courseContent.content[0].videoArr[0].fileUrl)
 				setCurrentVideoName(courseContent.content[0].videoArr[0].topic)
 				setCurrentChapterName(courseContent.content[0].name)
-				console.log("current video URL : " + courseContent.content[0].videoArr[0].fileUrl)
 
 				const courseRef = projectFirestore.collection("courses").doc(id)
 
 				// fetching course Data
 				let course = (await courseRef.get()).data()
 				setCourse(course)
-
-
 				setIsLoading(false)
 			} catch (err) {
 
@@ -82,6 +79,13 @@ function CourseView() {
 		<div className="container course-view-div">
 			{isLoading ? <LoadingAnimation /> :
 				<div className="row">
+					<ToastContainer />
+					<ReviewModalForm
+						show={reviewModalShow}
+						id={id}
+						course={course}
+						onHide={() => { setReviewModalShow(false) }}
+					/>
 					<div className="col-12 col-lg-6">
 						{/* <div className="col-12"> */}
 						<div className="course-video-div">
@@ -105,6 +109,14 @@ function CourseView() {
 										}
 									}}
 								/>
+
+								<button
+									className="btn btn-light"
+									onClick={() => setReviewModalShow(true)}
+									style={{margin : "1rem"}}
+								>
+									<strong> Rate Course </strong>
+								</button>
 
 								{/* <video height="20rem" width="25rem" controls>
 									<source src={currentVideoURL} type="video/mp4" />

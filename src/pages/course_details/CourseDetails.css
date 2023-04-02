@@ -1,18 +1,26 @@
-.course-details-holder{
+.course-details-holder {
     padding-top: 2rem;
 }
 
-.course-details-holder .button-div{
+.course-details-holder .button-div {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
     margin: 1rem;
 }
 
-.course-details-holder .button-div .btn{
-    margin : 0.3rem;
+.course-details-holder .button-div .btn {
+    margin: 0.3rem;
 }
 
 .course-description {
-    margin-top : 1.5rem;
+    margin-top: 1.5rem;
+    border-radius: 25px;
+    border: 5px solid #ddd;
+    box-shadow: -3px -3px 9px #aaa9a9a2,
+        3px 3px 7px rgba(147, 149, 151, 0.671);
+    color: white;
+    background: none;
+    padding: 1rem;
+    font-size: 1.2rem;
 }

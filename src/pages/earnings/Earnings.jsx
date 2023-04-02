@@ -94,7 +94,7 @@ function Earnings() {
 							<thead>
 								<tr>
 									<th>Name</th>
-									<th>Earning</th>
+									<th>Earning (Rs.)</th>
 								</tr>
 							</thead>
 							<tbody>

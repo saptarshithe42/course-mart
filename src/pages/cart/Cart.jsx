@@ -61,8 +61,6 @@ function Cart() {
 				setTotalPrice(total)
 				setIsLoading(false)
 
-				console.log(arr)
-
 
 			} catch (err) {
 

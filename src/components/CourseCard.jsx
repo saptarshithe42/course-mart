@@ -24,7 +24,7 @@ function CourseCard({ course }) {
                         }</div>
 
                         <div className="card-text rating-div" style={{ fontSize: "1rem" }}>
-                            <div>{course.avgRating}</div>
+                            <div>{Math.round(course.avgRating * 10) / 10}</div>
                             <div>
                                 <Rating initialValue={course.avgRating}
                                     allowFraction="true"
