@@ -10,6 +10,8 @@ import "./ContentUpload.css"
 import ChapterAccordion from "../../components/ChapterAccordion"
 import LoadingAnimation from "../../components/LoadingAnimation"
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // icons
 import { AiOutlineCloseSquare } from "react-icons/ai"
@@ -54,7 +56,10 @@ function ContentUpload() {
         }
 
         if (!selected.type.includes("video")) {
-            alert("selected file is not video")
+            // alert("selected file is not video")
+            toast.error("selected file is not video", {
+                position : "top-center"
+            })
             setVideoFileError("selected file must be a video")
             return
         }
@@ -269,7 +274,10 @@ function ContentUpload() {
             navigate("/")
 
         } catch (err) {
-            alert(err)
+            // alert(err)
+            toast.error(err.message, {
+                position : "top-center"
+            })
         }
 
     }
@@ -287,7 +295,9 @@ function ContentUpload() {
                 </div>
                 :
                 <div className="content-upload-div">
+                    <ToastContainer />
                     <h1 style={{ textAlign: "center" }}>{courseName}</h1>
+                    <p style={{textAlign : "center"}}>(Note : First video of first chapter will be used as preview)</p>
                     <form className="course-form content-form">
                         <div>
                             <div>

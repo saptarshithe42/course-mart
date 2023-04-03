@@ -11,7 +11,6 @@ import LoadingAnimation from "../../components/LoadingAnimation"
 import ReactPlayer from "react-player"
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "plyr-react/plyr.css"
 import CourseViewAccordion from "../../components/CourseViewAccordion"
 import ReviewModalForm from "../../components/ReviewModalForm"
 
