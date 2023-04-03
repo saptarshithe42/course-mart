@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    	
+      match /courses/{course_id} {
+      // allow read for anyone (both authorized and non-authorized)
+      	allow read : if true;
+      // only authenticated user is allowed for CRUD operations
+        allow create, read, update, delete : if request.auth != null;
+      }
+      
+      match /course_contents/{course_contents_id} {
+      // only authenticated user is allowed for CRUD operations
+        allow create, read, update, delete : if request.auth != null;
+      }
+      
+      match /reviews/{review_id} {
+      // only authenticated user is allowed to create and read reviews
+        allow create, read, delete : if request.auth != null;
+      }
+      
+      match /users/{user_id} {
+      // any authenticated user can read and create
+        allow create, read, update : if request.auth != null;
+      // only users who "own/created" a document can update it (user id's match)
+      }
+  }
+}
