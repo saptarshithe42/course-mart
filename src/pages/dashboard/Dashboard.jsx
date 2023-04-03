@@ -10,6 +10,8 @@ import './Dashboard.css'
 import SearchComponent from "../../components/SearchComponent";
 import CourseGrid from "../../components/CourseGrid";
 import LoadingAnimation from "../../components/LoadingAnimation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function Dashboard() {
@@ -28,8 +30,8 @@ export default function Dashboard() {
 				const courseRef = projectFirestore.collection("courses")
 				let docs = await courseRef
 				.where("isPublished", "==", true)
-				.orderBy("enrolledCount", "desc")
 				.orderBy("avgRating", "desc")
+				.orderBy("enrolledCount", "desc")
 				.limit(fetchLimit).get()
 
 				let arr = []
@@ -42,7 +44,14 @@ export default function Dashboard() {
 
 				setIsLoading(false);
 			} catch (err) {
-				console.log(err);
+
+				// alert(err)
+				
+				toast.error(err.message, {
+					position : "top-center"
+				})
+
+				console.log(err.message)
 			}
 
 		}
@@ -63,9 +72,10 @@ export default function Dashboard() {
 		<div className="dashboard">
 
 			<SearchComponent />
+			<ToastContainer />
 			{isLoading ? <LoadingAnimation /> :
 				<div className="main-div">
-					<h1 className="list-heading">Most Popular</h1>
+					<h1 className="list-heading">Highly Rated Courses</h1>
 					<CourseGrid
 						courseList={courseList}
 						cardType="course"

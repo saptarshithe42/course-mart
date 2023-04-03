@@ -8,6 +8,8 @@ import "./Draft.css"
 // components
 import LoadingAnimation from "../../components/LoadingAnimation"
 import CourseGrid from "../../components/CourseGrid"
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Draft() {
 
@@ -63,11 +65,14 @@ function Draft() {
 
 				setIsLoading(false)
 
-				console.log(arr)
+				// console.log(arr)
 
 
 			} catch (err) {
-				alert(err.message)
+				// alert(err.message)
+				toast.error(err.message, {
+					position : "top-center"
+				})
 			}
 		}
 
@@ -86,6 +91,7 @@ function Draft() {
 
 	return (
 		<div>
+			<ToastContainer />
 			{isLoading ? <LoadingAnimation /> :
 
 				<div className="main-div">

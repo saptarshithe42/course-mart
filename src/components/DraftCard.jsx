@@ -2,6 +2,10 @@ import React from 'react'
 import { projectFirestore } from '../firebase/config'
 import { useAuthContext } from '../hooks/useAuthContext'
 
+// components
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // styles
 import "./DraftCard.css"
 
@@ -27,7 +31,7 @@ function DraftCard({ course }) {
             // delete document from "courses" , "course_contents" & "reviews" collections
             await projectFirestore.collection("courses").doc(courseID).delete()
             await projectFirestore.collection("course_contents").doc(courseID).delete()
-            await projectFirestore.collection("reviews").doc(courseID).delete()
+            // await projectFirestore.collection("reviews").doc(courseID).delete()
 
             window.location.reload(true)
 

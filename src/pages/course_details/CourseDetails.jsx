@@ -37,8 +37,8 @@ function CourseDetails() {
     const [reviews, setReviews] = useState([])
     const [reviewFetchLimit, setReviewFetchLimit] = useState(2)
     const [reviewLoading, setReviewLoading] = useState(true)
-
-    const playerRef = useRef(null);
+    const [cartHidden, setCartHidden] = useState(false)
+    const [wishlistHidden, setWishlistHidden] = useState(false)
 
     const { user } = useAuthContext()
 
@@ -60,8 +60,8 @@ function CourseDetails() {
 
 
                 if (user.uid === course.createdByID) {
-                    setDisableAddToCart(true)
-                    setDisableAddToWishlist(true)
+                    setCartHidden(true)
+                    setWishlistHidden(true)
                 }
                 else {
                     const userRef = projectFirestore.collection("users").doc(user.uid)
@@ -317,6 +317,7 @@ function CourseDetails() {
                                                 className="btn btn-primary"
                                                 onClick={addToCart}
                                                 disabled={disableAddToCart}
+                                                hidden={cartHidden}
                                             >
                                                 <AiOutlineShoppingCart
                                                     fontSize="1.2rem"
@@ -325,6 +326,7 @@ function CourseDetails() {
                                             <button className="btn btn-danger"
                                                 onClick={addToWishlist}
                                                 disabled={disableAddToWishlist}
+                                                hidden={wishlistHidden}
                                             // style={{ color : "white"}}
                                             >
                                                 <BsFillSuitHeartFill
